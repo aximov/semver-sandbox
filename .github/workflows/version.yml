@@ -29,10 +29,3 @@ jobs:
           yarn version --patch
           git push
           git push --tags
-
-      - name: Sync develop branch
-        run: |
-          git fetch origin develop --depth=1
-          git checkout develop
-          git merge main
-          git push
