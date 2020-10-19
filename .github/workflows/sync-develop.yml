@@ -1,3 +1,5 @@
+name: Sync develop
+
 on:
   release:
     types: [released]
@@ -13,7 +15,7 @@ jobs:
       with:
         source_branch: "main"
         destination_branch: "develop"
-        pr_title: "develop を main ${{ github.ref }} に同期"
-        pr_body: "main で ${{ github.ref }} がリリースされました。 develop ブランチをこれに同期します。"
+        pr_title: "develop を main $GITHUB_REF に同期"
+        pr_body: "main で $GITHUB_REF がリリースされました。 develop ブランチをこれに同期します。"
         pr_label: "automated"
         github_token: ${{ secrets.GITHUB_TOKEN }}
