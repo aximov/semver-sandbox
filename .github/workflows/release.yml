@@ -94,7 +94,7 @@ jobs:
         with:
           source_branch: "main"
           destination_branch: "develop"
-          pr_title: "develop を main $GITHUB_REF に同期"
-          pr_body: "main で $GITHUB_REF がリリースされました。 develop ブランチをこれに同期します。"
+          pr_title: "develop を main ${{ steps.bump-semver.outputs.new_version }} に同期"
+          pr_body: "main で ${{ steps.bump-semver.outputs.new_version }} がリリースされました。 develop ブランチをこれに同期します。"
           pr_label: "automated"
           github_token: ${{ secrets.GITHUB_TOKEN }}
