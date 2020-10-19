@@ -1,0 +1,20 @@
+on:
+  release:
+    types: [released]
+
+jobs:
+  Syncing:
+    name: Syncing develop branch with main
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Create pull request
+      uses: repo-sync/pull-request@v2
+      with:
+        source_branch: "main"
+        destination_branch: "develop"
+        pr_title: "develop を main ${{ github.ref }} に同期"
+        pr_body: "main で ${{ github.ref }} がリリースされました。 develop ブランチをこれに同期します。"
+        pr_template: ".github/PULL_REQUEST_TEMPLATE.md"
+        pr_label: "automated"
+        github_token: ${{ secrets.GITHUB_TOKEN }}
