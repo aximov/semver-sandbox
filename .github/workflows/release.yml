@@ -52,7 +52,7 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          yarn version ${{ steps.bump-semver.outputs.new_version }}
+          yarn version --new-version ${{ steps.bump-semver.outputs.new_version }}
           git push
 
       - name: Extract release note
