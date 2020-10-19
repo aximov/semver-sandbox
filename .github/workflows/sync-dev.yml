@@ -1,0 +1,28 @@
+name: Sync develop branch
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  syncing:
+    name: Syncing
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v3.4.1
+        with:
+          branch: main
+          base: develop
+          title: 'develop を main $GITHUB_REF と同期する'
+          body: |
+            main で新しいリリース $GITHUB_REF が作成されました。このバージョンを develop に同期します。
+          labels: |
+            automated
+
+      - name: Check outputs
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
