@@ -1,4 +1,4 @@
-name: Versioning CI
+name: Versioning
 
 # Run this workflow every time a new commit pushed to main
 on:
