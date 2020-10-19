@@ -1,0 +1,100 @@
+name: Create Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: main
+
+      - name: Set Node up
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: '12'
+
+      - name: Get merged pull request
+        uses: actions-ecosystem/action-get-merged-pull-request@v1
+        id: get-merged-pull-request
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get release level
+        uses: actions-ecosystem/action-release-label@v1
+        id: release-label
+        if: ${{ steps.get-merged-pull-request.outputs.title != null }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: ${{ steps.get-merged-pull-request.outputs.labels }}
+
+      - name: Get latest tag
+        uses: actions-ecosystem/action-get-latest-tag@v1
+        id: get-latest-tag
+        if: ${{ steps.release-label.outputs.level != null }}
+        with:
+          semver_only: true
+
+      - name: Bump semver
+        uses: actions-ecosystem/action-bump-semver@v1
+        id: bump-semver
+        if: ${{ steps.release-label.outputs.level != null }}
+        with:
+          current_version: ${{ steps.get-latest-tag.outputs.tag }}
+          level: ${{ steps.release-label.outputs.level }}
+
+      - name: Update package.json
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          yarn version ${{ steps.bump-semver.outputs.new_version }}
+          git push
+
+      - name: Extract release note
+        uses: actions-ecosystem/action-regex-match@v2
+        id: regex-match
+        if: ${{ steps.bump-semver.outputs.new_version != null }}
+        with:
+          text: ${{ steps.get-merged-pull-request.outputs.body }}
+          regex: '```release_note([\s\S]*)```'
+
+      - name: Push new tag
+        uses: actions-ecosystem/action-push-tag@v1
+        if: ${{ steps.bump-semver.outputs.new_version != null }}
+        with:
+          tag: ${{ steps.bump-semver.outputs.new_version }}
+          message: "${{ steps.bump-semver.outputs.new_version }}: PR #${{ steps.get-merged-pull-request.outputs.number }} ${{ steps.get-merged-pull-request.outputs.title }}"
+
+      - name: Create release
+        uses: actions/create-release@v1
+        if: ${{ steps.release-label.outputs.level == 'major' || steps.release-label.outputs.level == 'minor' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.bump-semver.outputs.new_version }}
+          release_name: ${{ steps.bump-semver.outputs.new_version }}
+          body: ${{ steps.regex-match.outputs.group1 }}
+
+      - name: Create comment
+        uses: actions-ecosystem/action-create-comment@v1
+        if: ${{ steps.bump-semver.outputs.new_version != null }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          number: ${{ steps.get-merged-pull-request.outputs.number }}
+          body: |
+            The new version [${{ steps.bump-semver.outputs.new_version }}](https://github.com/${{ github.repository }}/releases/tag/${{ steps.bump-semver.outputs.new_version }}) has been released :tada:
+
+      - name: Create pull request
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: "main"
+          destination_branch: "develop"
+          pr_title: "develop を main ${{ steps.bump-semver.outputs.new_version }} に同期"
+          pr_body: "main で ${{ steps.bump-semver.outputs.new_version }} がリリースされました。 develop ブランチをこれに同期します。"
+          pr_label: "automated"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
