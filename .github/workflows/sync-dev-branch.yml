@@ -2,7 +2,7 @@ name: Sync develop branch
 
 on:
   release:
-    types: [released]
+    types: [published, created, released]
 
 jobs:
   sync-dev-branch:
