@@ -97,3 +97,22 @@ jobs:
           pr_body: "${{ steps.bump-semver.outputs.new_version }} がリリースされました。 develop ブランチをこのリリースに同期します。"
           pr_label: "automated"
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy:
+    name: Deploy to GAE
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: '314.0.0'
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      - run: yarn install
+      - run: yarn build
+      - run: gcloud app deploy --quiet --version ${{ jobs.release.steps.bump-semver.outputs.new_version }}
