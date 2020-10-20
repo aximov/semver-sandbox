@@ -1,18 +1,13 @@
-name: Verify release pull request
-
+name: Verify Pull Request Labels
 on:
   pull_request:
-    branches: [main]
     types: [opened, labeled, unlabeled, synchronize]
-
-
 jobs:
-  Verify:
-    name: Verify
+  label:
     runs-on: ubuntu-latest
     steps:
-      - name: Verify release label
-        uses: jesusvasquez333/verify-pr-label-action@v1.3.1
+      - uses: mheap/github-action-required-labels@v1
         with:
-          github-token: '${{ secrets.GITHUB_TOKEN }}'
-          valid-labels: 'release/major, release/minor, release/patch'
+          mode: exactly
+          count: 1
+          labels: "release/major, release/minor, release/patch"
