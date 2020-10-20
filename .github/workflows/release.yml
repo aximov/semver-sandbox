@@ -112,7 +112,10 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
-      - uses: actions/setup-node@v1
+      - uses: frabert/replace-string-action@v1.2
+        id: format-version
         with:
-          node-version: '12'
-      - run: gcloud app deploy --quiet --version ${{ needs.release.outputs.new_version }}
+          pattern: '\.'
+          string: ${{ needs.release.outputs.new_version }}
+          replace-with: '-'
+      - run: gcloud app deploy --quiet --version ${{ steps.format-version.replaced }}
