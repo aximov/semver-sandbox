@@ -9,6 +9,8 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.bump-semver.outputs.new_version }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -115,4 +117,4 @@ jobs:
           node-version: '12'
       - run: yarn install
       - run: yarn build
-      - run: gcloud app deploy --quiet --version ${{ jobs.release.steps.bump-semver.outputs.new_version }}
+      - run: gcloud app deploy --quiet --version ${{ needs.release.outputs.new_version }}

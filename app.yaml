@@ -13,4 +13,5 @@
 
 # [START gae_quickstart_yaml]
 runtime: nodejs12
+service: semver-sandbox
 # [END gae_quickstart_yaml]
