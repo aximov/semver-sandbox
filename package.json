@@ -1,6 +1,6 @@
 {
   "name": "semver-sandbox",
-  "version": "v6.2.0",
+  "version": "v6.3.0",
   "main": "index.js",
   "repository": "git@github.com:aximov/semver-sandbox.git",
   "author": "aximov <d@alumni.tus.ac.jp>",
