@@ -89,13 +89,3 @@ jobs:
           number: ${{ steps.get-merged-pull-request.outputs.number }}
           body: |
             The new version [${{ steps.bump-semver.outputs.new_version }}](https://github.com/${{ github.repository }}/releases/tag/${{ steps.bump-semver.outputs.new_version }}) has been released :tada:
-
-      - name: Create pull request to sync dev branch
-        uses: repo-sync/pull-request@v2
-        with:
-          source_branch: "main"
-          destination_branch: "develop"
-          pr_title: "develop を ${{ steps.bump-semver.outputs.new_version }} に同期"
-          pr_body: "${{ steps.bump-semver.outputs.new_version }} がリリースされました。 develop ブランチをこのリリースに同期します。"
-          pr_label: "automated"
-          github_token: ${{ secrets.GITHUB_TOKEN }}
