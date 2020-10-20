@@ -1,0 +1,20 @@
+name: Sync develop branch
+
+on:
+  release:
+    types: [released]
+
+jobs:
+  sync-dev-branch:
+    name: Sync develop branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create pull request to sync dev branch
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: "main"
+          destination_branch: "develop"
+          pr_title: "develop を ${{ steps.bump-semver.outputs.new_version }} に同期"
+          pr_body: "${{ steps.bump-semver.outputs.new_version }} がリリースされました。 develop ブランチをこのリリースに同期します。"
+          pr_label: "automated"
+          github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,4 +1,4 @@
-name: Release version prior notice
+name: Notify release version beforehand
 
 on:
   pull_request:
@@ -7,8 +7,8 @@ on:
       - labeled
 
 jobs:
-  release-notice:
-    name: Release notice
+  notify-release-version:
+    name: Notify Release Version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
