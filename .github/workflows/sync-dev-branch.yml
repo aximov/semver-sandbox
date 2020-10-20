@@ -2,7 +2,7 @@ name: Sync dev branch
 
 on:
   release:
-    types: [created]
+    types: [published]
 
 jobs:
   sync:
