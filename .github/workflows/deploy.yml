@@ -1,12 +1,19 @@
 name: Manually Triggered Deploy
 
 on: 
-  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - "Release"
+    branches:
+      - "main"
+    types:
+      - completed
 
 jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v2
       - name: Get latest tag
