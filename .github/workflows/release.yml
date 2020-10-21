@@ -114,4 +114,4 @@ jobs:
           export_default_credentials: true
       - id: format
         run: echo "::set-output name=version::`echo ${{ steps.bump-semver.outputs.new_version }} | sed 's/\./-/g'`"
-      - run: gcloud app deploy --quiet --version ${{ steps.format.version }}
+      - run: gcloud app deploy --quiet --version ${{ steps.format.outputs.version }}
