@@ -1,4 +1,4 @@
-name: Create Release
+name: Release and Deploy
 
 on:
   push:
@@ -101,11 +101,16 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
   deploy:
-    name: Deploy to GAE
+    name: Deploy
     needs: release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Get latest tag
+        uses: actions-ecosystem/action-get-latest-tag@v1
+        id: get-latest-tag
+        with:
+          semver_only: true
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
           version: '314.0.0'
@@ -113,5 +118,5 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
       - id: format
-        run: echo "::set-output name=version::`echo ${{ needs.release.outputs.new_version }} | sed 's/\./-/g'`"
+        run: echo "::set-output name=version::`echo ${{ steps.get-latest-tag.outputs.tag }} | sed 's/\./-/g'`"
       - run: gcloud app deploy --quiet --version ${{ steps.format.outputs.version }}
