@@ -111,6 +111,9 @@ jobs:
         id: get-latest-tag
         with:
           semver_only: true
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ steps.get-latest-tag.outputs.tag }}
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
           version: '314.0.0'
