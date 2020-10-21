@@ -1,0 +1,25 @@
+name: Manually Triggered Deploy
+
+on: 
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get latest tag
+        uses: actions-ecosystem/action-get-latest-tag@v1
+        id: get-latest-tag
+        with:
+          semver_only: true
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: '314.0.0'
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+      - id: format
+        run: echo "::set-output name=version::`echo ${{ steps.get-latest-tag.outputs.tag }} | sed 's/\./-/g'`"
+      - run: gcloud app deploy --quiet --version ${{ steps.format.outputs.version }}
