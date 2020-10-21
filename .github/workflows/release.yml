@@ -112,10 +112,6 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
-      - uses: frabert/replace-string-action@v1.2
-        id: format-version
-        with:
-          pattern: '\.'
-          string: ${{ needs.release.outputs.new_version }}
-          replace-with: '-'
-      - run: gcloud app deploy --quiet --version ${{ steps.format-version.replaced }}
+      - id: format
+        run: echo "::set-output name=version::`echo v6.4.4 | sed 's/\./-/g'`"
+      - run: gcloud app deploy --quiet --version ${{ steps.format.version }}
