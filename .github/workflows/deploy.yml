@@ -33,3 +33,4 @@ jobs:
       - id: format
         run: echo "::set-output name=version::`echo ${{ steps.get-latest-tag.outputs.tag }} | sed 's/\./-/g'`"
       - run: gcloud app deploy --quiet --version ${{ steps.format.outputs.version }}
+      - run: echo $GITHUB_REF
