@@ -33,7 +33,7 @@ jobs:
       - id: format
         run: echo "::set-output name=version::`echo ${{ steps.get-latest-tag.outputs.tag }} | sed 's/\./-/g'`"
       - name: Start deployment
-        uses: bobheadxi/deployments@v0
+        uses: bobheadxi/deployments@v0.4.2
         id: start-deployment
         with:
           step: start
@@ -43,7 +43,7 @@ jobs:
           ref: refs/tags/${{ steps.get-latest-tag.outputs.tag }}
       - run: gcloud app deploy --quiet --version ${{ steps.format.outputs.version }}
       - name: Finish Deployment
-        uses: bobheadxi/deployments@v0
+        uses: bobheadxi/deployments@v0.4.2
         # always は deploy が失敗したときも deployment を終了させるために必要
         if: ${{ always() }}
         with:
