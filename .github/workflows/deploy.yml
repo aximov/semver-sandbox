@@ -43,7 +43,7 @@ jobs:
           ref: refs/tags/${{ steps.get-latest-tag.outputs.tag }}
       - run: gcloud app deploy --quiet --version ${{ steps.format.outputs.version }}
       - name: Finish Deployment
-        uses: bobheadxi/deployments@master
+        uses: bobheadxi/deployments@v0
         # always は deploy が失敗したときも deployment を終了させるために必要
         if: ${{ always() }}
         with:
