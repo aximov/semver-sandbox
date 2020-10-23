@@ -1,8 +1,11 @@
 name: Version
 
 on:
-  release:
-    types: [created, edited]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'New version to tag'
+        required: true
 
 jobs:
   version:
@@ -19,31 +22,13 @@ jobs:
         with:
           node-version: '12'
 
-      - name: Name branch
-        id: branch
-        run: echo "::set-output name=name::chore/update-package-json-${{ github.event.release.tag_name }}"
-
       - name: Update package.json
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git checkout -B ${{ steps.branch.outputs.name }}
           yarn config set version-git-message "%s"
-          yarn version --new-version ${{ github.event.release.tag_name }}
+          yarn version --new-version ${{ github.event.inputs.version }}
           git push
 
       - name: Push version tag
-        run: git push ${{ steps.branch.outputs.name }} $GITHUB_REF
-
-      - name: Create pull request
-        uses: repo-sync/pull-request@v2
-        with:
-          source_branch: ${{ steps.branch.outputs.name }}
-          destination_branch: "main"
-          pr_title: "新バージョン ${{ github.event.release.tag_name }} の作成"
-          pr_body: |
-            新バージョン ${{ github.event.release.tag_name }} の [draft release](${{ github.event.release.html_url }}) が作成されました。
-            これを package.json に反映してタグを付けました。
-            この PR をマージして draft release を publish してください。
-          pr_label: "automated,skip-changelog"
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+        run: git push origin refs/tags/${{ github.event.inputs.version }}
