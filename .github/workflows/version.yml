@@ -27,6 +27,7 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           yarn config set version-git-message "%s"
+          yarn config set version-tag-prefix ""
           yarn version --new-version ${{ github.event.inputs.version }}
           git push
 
