@@ -50,4 +50,4 @@ jobs:
           step: finish
           token: ${{ secrets.GITHUB_TOKEN }}
           status: ${{ job.status }}
-          deployment_id: ${{ steps.start-deployment.outputs.deployment_id }
+          deployment_id: ${{ steps.start-deployment.outputs.deployment_id }}
