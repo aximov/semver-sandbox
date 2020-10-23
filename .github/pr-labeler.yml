@@ -1,0 +1,5 @@
+feature: ['feature/*', 'feat/*']
+fix: fix/*
+chore: chore/*
+release/patch: fix/*
+release/minor: feature/*
