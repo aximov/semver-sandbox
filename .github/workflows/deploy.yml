@@ -12,7 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: $GITHUB_REF
+          ref: ${{ github.ref }}
+      
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
           version: '314.0.0'
@@ -21,16 +22,16 @@ jobs:
           export_default_credentials: true
       - name: Format version for GAE
         id: format
-        run: echo "::set-output name=version::`echo $GITHUB_REF | sed 's/\./-/g'`"
+        run: echo "::set-output name=version::`echo ${{ github.event.release.tag_name }} | sed 's/\./-/g'`"
       - name: Start deployment
         uses: bobheadxi/deployments@v0.4.2
         id: start-deployment
         with:
           step: start
           token: ${{ secrets.GITHUB_TOKEN }}
-          desc: $GITHUB_REF
+          desc: ${{ github.event.release.tag_name }}
           env: production
-          ref: $GITHUB_REF
+          ref: ${{ github.ref }}
       - run: gcloud app deploy --quiet --version ${{ steps.format.outputs.version }}
       - name: Finish Deployment
         uses: bobheadxi/deployments@v0.4.2
