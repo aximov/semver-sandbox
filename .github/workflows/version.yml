@@ -33,7 +33,7 @@ jobs:
           git push
 
       - name: Push version tag
-          git push ${{ steps.branch.outputs.name }} $GITHUB_REF
+        run: git push ${{ steps.branch.outputs.name }} $GITHUB_REF
 
       - name: Create pull request
         uses: repo-sync/pull-request@v2
