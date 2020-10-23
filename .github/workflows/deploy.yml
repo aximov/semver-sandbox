@@ -1,46 +1,36 @@
 name: Deploy
 
 on: 
-  workflow_run:
-    workflows:
-      - "Release"
-    branches:
-      - "main"
+  release:
     types:
-      - completed
+      - released
 
 jobs:
   deploy:
-    name: Deploy
+    name: Deploy to GAE
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v2
-      - name: Get latest tag
-        uses: actions-ecosystem/action-get-latest-tag@v1
-        id: get-latest-tag
         with:
-          semver_only: true
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{ steps.get-latest-tag.outputs.tag }}
+          ref: $GITHUB_REF
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
           version: '314.0.0'
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
-      - id: format
-        run: echo "::set-output name=version::`echo ${{ steps.get-latest-tag.outputs.tag }} | sed 's/\./-/g'`"
+      - name: Format version for GAE
+        id: format
+        run: echo "::set-output name=version::`echo $GITHUB_REF | sed 's/\./-/g'`"
       - name: Start deployment
         uses: bobheadxi/deployments@v0.4.2
         id: start-deployment
         with:
           step: start
           token: ${{ secrets.GITHUB_TOKEN }}
-          desc: ${{ steps.get-latest-tag.outputs.tag }}
+          desc: $GITHUB_REF
           env: production
-          ref: refs/tags/${{ steps.get-latest-tag.outputs.tag }}
+          ref: $GITHUB_REF
       - run: gcloud app deploy --quiet --version ${{ steps.format.outputs.version }}
       - name: Finish Deployment
         uses: bobheadxi/deployments@v0.4.2
