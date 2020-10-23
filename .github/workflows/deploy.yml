@@ -32,5 +32,22 @@ jobs:
           export_default_credentials: true
       - id: format
         run: echo "::set-output name=version::`echo ${{ steps.get-latest-tag.outputs.tag }} | sed 's/\./-/g'`"
+      - name: Start deployment
+        uses: bobheadxi/deployments@v0
+        id: start-deployment
+        with:
+          step: start
+          token: ${{ secrets.GITHUB_TOKEN }}
+          desc: ${{ steps.get-latest-tag.outputs.tag }}
+          env: production
+          ref: refs/tags/${{ steps.get-latest-tag.outputs.tag }}
       - run: gcloud app deploy --quiet --version ${{ steps.format.outputs.version }}
-      - run: echo $GITHUB_REF
+      - name: Finish Deployment
+        uses: bobheadxi/deployments@v0
+        # always は deploy が失敗したときも deployment を終了させるために必要
+        if: ${{ always() }}
+        with:
+          step: finish
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
+          deployment_id: ${{ steps.start-deployment.outputs.deployment_id }
