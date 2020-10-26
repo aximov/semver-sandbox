@@ -12,5 +12,13 @@ jobs:
     steps:
       # Drafts your next Release notes as Pull Requests are merged
       - uses: release-drafter/release-drafter@v5
+        id: draft
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions-ecosystem/action-slack-notifier@v1
+        with:
+          slack_token: ${{ secrets.SLACK_TOKEN }}
+          message: |
+            GitHub リリースドラフト [${{ steps.draft.name }}](${{ steps.draft.html_url }}) が更新されました。
+            ${{ steps.draft.body }}
+          channel: ci
