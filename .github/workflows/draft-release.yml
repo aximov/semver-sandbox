@@ -15,8 +15,15 @@ jobs:
         id: draft
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - id: url-draft-edit
+      - name: Generate url to edit draft
+        id: url-draft-edit
         run: echo "::set-output name=this::`echo ${{ steps.draft.outputs.html_url }} | sed 's/releases\/tag/releases\/edit/'`"
+      - name: Escape release note
+        id: escape-note
+        uses: actions/github-script@v3
+        with:
+          script: return `${{ steps.draft.outputs.body }}`;
+          result-encoding: string
       - uses: actions-ecosystem/action-slack-notifier@v1
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
@@ -44,7 +51,7 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*リリースノート:*\n${{ steps.draft.outputs.body }}"
+                      "text": "*リリースノート:*\n${{ steps.escape-note.outputs.result }}"
                     }
                   ]
                 },
