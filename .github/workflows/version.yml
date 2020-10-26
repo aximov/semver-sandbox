@@ -8,8 +8,8 @@ on:
         required: true
 
 jobs:
-  version:
-    name: version
+  update-package-json-and-tag:
+    name: Update package.json and tag
     runs-on: ubuntu-latest
 
     steps:
