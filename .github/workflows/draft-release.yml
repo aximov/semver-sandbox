@@ -33,7 +33,7 @@ jobs:
           channel: ci
           custom_payload: |
             {
-              "text": "<https://github.com/${{ github.repository }}|${{ github.repository }}> の main へ新しい push がありました。",
+              "text": "Draft release の更新",
               "blocks": [
                 {
                   "type": "header",
@@ -41,13 +41,6 @@ jobs:
                     "type": "plain_text",
                     "text": "Draft release の更新",
                     "emoji": true
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "<https://github.com/${{ github.repository }}|${{ github.repository }}> の main へ新しい push がありました。"
                   }
                 },
                 {
