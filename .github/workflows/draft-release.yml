@@ -37,9 +37,8 @@ jobs:
                 {
                   "type": "section",
                   "text": {
-                    "type": "plain_text",
-                    "text": "<https://github.com/${{ github.repository }}|${{ github.repository }}> の下書きリリースが更新されました。",
-                    "emoji": true
+                    "type": "mrkdwn",
+                    "text": "<https://github.com/${{ github.repository }}|${{ github.repository }}> の下書きリリースが更新されました。"
                   }
                 },
                 {
