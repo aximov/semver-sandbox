@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'New version to tag'
+        description: 'New version to tag (like v0.0.0)'
         required: true
 
 jobs:
