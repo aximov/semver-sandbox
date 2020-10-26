@@ -30,12 +30,13 @@ jobs:
           channel: ci
           custom_payload: |
             {
+              "text": "<https://github.com/${{ github.repository }}|${{ github.repository }}> の main へ新しい push がありました。",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "<https://github.com/${{ github.repository }}|${{ github.repository }}> の main へ新しい push がありました。\n現在の GitHub リリースドラフトは <${{ steps.draft.outputs.html_url }}|${{ steps.draft.outputs.name }}> です。"
+                    "text": "<https://github.com/${{ github.repository }}|${{ github.repository }}> の main へ新しい push がありました。"
                   }
                 },
                 {
@@ -55,7 +56,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*リリースノート:*\n${{ steps.escape-note.outputs.result }}"
+                    "text": "*リリースノート（ドラフト）:*\n${{ steps.escape-note.outputs.result }}"
                   }
                 },
                 {
