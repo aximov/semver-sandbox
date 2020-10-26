@@ -15,13 +15,63 @@ jobs:
         id: draft
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - id: url-draft-edit
+        run: echo "::set-output name=this::`echo ${{ steps.draft.outputs.html_url }} | sed 's/releases\/tag/releases\/edit/'`"
       - uses: actions-ecosystem/action-slack-notifier@v1
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
-          message: |
-            main ブランチへの新しい push がありました。
-            現在の GitHub リリースドラフトは <${{ steps.draft.outputs.html_url }}|${{ steps.draft.outputs.name }}> です。
-            ```
-            ${{ steps.draft.outputs.body }}
-            ```
           channel: ci
+          custom_payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "<https://github.com/${{ github.repository }}|${{ github.repository }}> の main へ新しい push がありました。\n現在の GitHub リリースドラフトは <${{ steps.draft.outputs.html_url }}|${{ steps.draft.outputs.name }}> です。"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*リポジトリ:*\n<https://github.com/${{ github.repository }}|${{ github.repository }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*次のリリース:*\n<${{ steps.draft.outputs.html_url }}|${{ steps.draft.outputs.tag_name }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*リリースノート:*\n${{ steps.draft.outputs.body }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "emoji": true,
+                        "text": "リリースノートを編集"
+                      },
+                      "style": "primary",
+                      "url": "${{ steps.url-draft-edit.outputs.this }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "plain_text",
+                      "text": "リリースを publish するとビルドとデプロイも実行されます。",
+                      "emoji": true
+                    }
+                  ]
+                }
+              ]
+            }
