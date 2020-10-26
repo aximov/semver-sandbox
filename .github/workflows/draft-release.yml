@@ -20,6 +20,6 @@ jobs:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           message: |
             `main` ブランチへの新しい push がありました。
-            現在の GitHub リリースドラフトは <${{ steps.draft.outputs.name }}|${{ steps.draft.outputs.html_url }}> です。
+            現在の GitHub リリースドラフトは <${{ steps.draft.outputs.html_url }}|${{ steps.draft.outputs.name }}> です。
             ${{ steps.draft.outputs.body }}
           channel: ci
