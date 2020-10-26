@@ -22,7 +22,7 @@ jobs:
         id: escape-note
         uses: actions/github-script@v3
         with:
-          script: return `${{ steps.draft.outputs.body }}`;
+          script: return ${{ steps.draft.outputs.body }}.replace(/\n/g, '\\n');
           result-encoding: string
       - uses: actions-ecosystem/action-slack-notifier@v1
         with:
