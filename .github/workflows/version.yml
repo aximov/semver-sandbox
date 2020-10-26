@@ -45,3 +45,4 @@ jobs:
           channel: ci
           message: 'package.json と tag の <https://github.com/${{ github.repository }}/releases/tag/${{ github.event.inputs.version }}|${{ github.event.inputs.version }}> への更新が完了しました: <https://github.com/${{ github.repository }}/commit/${{ steps.commit-hash.outputs.this }}|commit>'
           verbose: true
+          color: 'blue'
