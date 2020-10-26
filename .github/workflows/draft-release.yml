@@ -33,13 +33,12 @@ jobs:
           channel: ci
           custom_payload: |
             {
-              "text": "Draft release の更新",
               "blocks": [
                 {
-                  "type": "header",
+                  "type": "section",
                   "text": {
                     "type": "plain_text",
-                    "text": "Draft release の更新",
+                    "text": "<https://github.com/${{ github.repository }}|${{ github.repository }}> の下書きリリースが更新されました。",
                     "emoji": true
                   }
                 },
@@ -48,22 +47,16 @@ jobs:
                 },
                 {
                   "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*リポジトリ:*\n<https://github.com/${{ github.repository }}|${{ github.repository }}>"
-                    },
-                    {
+                  "text": {
                       "type": "mrkdwn",
                       "text": "*次のリリース:*\n<${{ steps.draft.outputs.html_url }}|${{ steps.draft.outputs.tag_name }}>"
                     }
-                  ]
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*リリースノート（ドラフト）:*\n${{ steps.escape-note.outputs.result }}"
+                    "text": "*リリースノート (下書き):*\n${{ steps.escape-note.outputs.result }}"
                   }
                 },
                 {
