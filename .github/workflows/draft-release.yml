@@ -48,12 +48,15 @@ jobs:
                     {
                       "type": "mrkdwn",
                       "text": "*次のリリース:*\n<${{ steps.draft.outputs.html_url }}|${{ steps.draft.outputs.tag_name }}>"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*リリースノート:*\n${{ steps.escape-note.outputs.result }}"
                     }
                   ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*リリースノート:*\n${{ steps.escape-note.outputs.result }}"
+                  }
                 },
                 {
                   "type": "actions",
