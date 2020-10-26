@@ -33,3 +33,11 @@ jobs:
 
       - name: Push version tag
         run: git push origin refs/tags/${{ github.event.inputs.version }}
+
+      - name: Post to Slack
+        uses: actions-ecosystem/action-slack-notifier@v1
+        with:
+          slack_token: ${{ secrets.SLACK_TOKEN }}
+          channel: ci
+          message: 'package.json と tag の更新が完了しました。'
+          verbose: true
