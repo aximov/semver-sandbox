@@ -31,6 +31,7 @@ jobs:
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel: ci
+          message: '${{ github.repository }} の下書きリリースが更新されました。'
           custom_payload: |
             {
               "blocks": [
