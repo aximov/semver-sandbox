@@ -56,11 +56,8 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*リリースノート (下書き):*\n${{ steps.escape-note.outputs.result }}"
+                    "text": "*リリースノート (下書き):*\n```\n${{ steps.escape-note.outputs.result }}\n```"
                   }
-                },
-                {
-                  "type": "divider"
                 },
                 {
                   "type": "actions",
@@ -78,11 +75,14 @@ jobs:
                   ]
                 },
                 {
+                  "type": "divider"
+                },
+                {
                   "type": "context",
                   "elements": [
                     {
                       "type": "plain_text",
-                      "text": "リリースを publish するとビルドとデプロイも実行されます。",
+                      "text": "リリースを publish するとビルド、デプロイ、ロールアウトも実行されます。",
                       "emoji": true
                     }
                   ]
