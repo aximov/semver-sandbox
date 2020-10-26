@@ -71,6 +71,33 @@ jobs:
                       },
                       "style": "primary",
                       "url": "${{ steps.url-draft-edit.outputs.result }}"
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "emoji": true,
+                        "text": "package.json & tag の更新"
+                      },
+                      "url": "https://github.com/${{ github.repository }}/actions?query=workflow%3AVersion",
+                      "confirm": {
+                        "title": {
+                          "type": "plain_text",
+                          "text": "リリースの準備はできましたか?"
+                        },
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": "package.json と tag を次のリリースバージョンに更新し、デフォルトブランチに直接コミットします。\nリリース内容が固まったら実行してください。"
+                        },
+                        "confirm": {
+                          "type": "plain_text",
+                          "text": "更新ページを開いてバージョンを入力する"
+                        },
+                        "deny": {
+                          "type": "plain_text",
+                          "text": "まだしない"
+                        }
+                      }
                     }
                   ]
                 },
