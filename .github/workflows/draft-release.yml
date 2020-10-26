@@ -17,7 +17,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Generate url to edit draft
         id: url-draft-edit
-        run: echo "::set-output name=this::`echo ${{ steps.draft.outputs.html_url }} | sed 's/releases\/tag/releases\/edit/'`"
+        uses: actions/github-script@v3
+        with:
+          script: return "${{ steps.draft.outputs.html_url }}".replace(/releases\/tag/, 'releases\/edit');
+          result-encoding: string
       - name: Escape release note
         id: escape-note
         uses: actions/github-script@v3
@@ -84,7 +87,7 @@ jobs:
                         "text": "リリースノートを編集"
                       },
                       "style": "primary",
-                      "url": "${{ steps.url-draft-edit.outputs.this }}"
+                      "url": "${{ steps.url-draft-edit.outputs.result }}"
                     }
                   ]
                 },
