@@ -19,6 +19,6 @@ jobs:
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           message: |
-            GitHub リリースドラフト [${{ steps.draft.name }}](${{ steps.draft.html_url }}) が更新されました。
-            ${{ steps.draft.body }}
+            GitHub リリースドラフト [${{ steps.draft.outputs.name }}](${{ steps.draft.outputs.html_url }}) が更新されました。
+            ${{ steps.draft.outputs.body }}
           channel: ci
