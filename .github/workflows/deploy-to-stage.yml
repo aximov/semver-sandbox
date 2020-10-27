@@ -29,7 +29,14 @@ jobs:
           desc: ${{ github.sha }}
           env: staging
           ref: ${{ github.ref }}
-      - run: gcloud app deploy app.stage.yaml --quiet --version ${{ github.sha }}
+      - name: Execute deployment
+        id: deploy
+        uses: GoogleCloudPlatform/github-actions/appengine-deploy@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          deliverables: app.stage.yaml
+          version: ${{ github.sha }}
+          promote: true
       - name: Finish Deployment
         uses: bobheadxi/deployments@v0.4.2
         # always は deploy が失敗したときも deployment を終了させるために必要
@@ -39,3 +46,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           status: ${{ job.status }}
           deployment_id: ${{ steps.start-deployment.outputs.deployment_id }}
+          env_url: ${{ steps.deploy.outputs.url }}
