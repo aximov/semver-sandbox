@@ -1,9 +1,9 @@
 name: Deploy to stage
 
 on: 
-  release:
-    types:
-      - released
+  push:
+    branches:
+      - "main"
 
 jobs:
   deploy:
