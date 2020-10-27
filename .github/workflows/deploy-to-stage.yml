@@ -27,7 +27,7 @@ jobs:
           step: start
           token: ${{ secrets.GITHUB_TOKEN }}
           desc: ${{ github.sha }}
-          env: production
+          env: staging
           ref: ${{ github.ref }}
       - run: gcloud app deploy app.stage.yaml --quiet --version ${{ github.sha }}
       - name: Finish Deployment
