@@ -102,9 +102,6 @@ jobs:
                   ]
                 },
                 {
-                  "type": "divider"
-                },
-                {
                   "type": "context",
                   "elements": [
                     {
