@@ -35,7 +35,7 @@ jobs:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel: ci
           message: |
-            :package::building_construction: <https://github.com/${{ github.repository }}|${{ github.repository }}> の <${{ steps.deploy.outputs.url }}|staging> へのデプロイを開始します。 <https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks|(log)>
+            :package::building_construction: <https://github.com/${{ github.repository }}|${{ github.repository }}> の staging へのデプロイを開始します。 <https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks|(log)>
       - name: Execute deployment
         id: deploy
         uses: GoogleCloudPlatform/github-actions/appengine-deploy@master
