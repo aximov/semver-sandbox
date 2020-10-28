@@ -49,14 +49,14 @@ jobs:
                   "type": "section",
                   "text": {
                       "type": "mrkdwn",
-                      "text": "*次のリリース:*\n<${{ steps.draft.outputs.html_url }}|${{ steps.draft.outputs.tag_name }}>"
+                      "text": "*次のリリース*\n<${{ steps.draft.outputs.html_url }}|${{ steps.draft.outputs.tag_name }}>"
                     }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*リリースノート (下書き):*\n```\n${{ steps.escape-note.outputs.result }}\n```"
+                    "text": "*リリースノート (下書き)*\n```\n${{ steps.escape-note.outputs.result }}\n```"
                   }
                 },
                 {
