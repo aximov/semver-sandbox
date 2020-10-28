@@ -20,13 +20,21 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
+
+      - name: Slice commit hash
+        id: slice-hash
+        uses: actions/github-script@v3
+        with:
+          script: return "${{ github.sha }}".slice(0,7)
+          result-encoding: string
+
       - name: Start deployment
         uses: bobheadxi/deployments@v0.4.2
         id: start-deployment
         with:
           step: start
           token: ${{ secrets.GITHUB_TOKEN }}
-          desc: ${{ github.sha }}
+          desc: ${{ steps.slice-hash.outputs.result }}
           env: staging
           ref: ${{ github.ref }}
       - name: Notify deployment in progress
@@ -42,7 +50,7 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           deliverables: app.stage.yaml
-          version: ${{ github.sha }}
+          version: ${{ steps.slice-hash.outputs.result }}
           promote: true
       - name: Finish Deployment
         uses: bobheadxi/deployments@v0.4.2
