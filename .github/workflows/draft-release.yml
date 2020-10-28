@@ -27,11 +27,12 @@ jobs:
         with:
           script: return `${{ steps.draft.outputs.body }}`.replace(/\n/g, '\\n');
           result-encoding: string
-      - uses: actions-ecosystem/action-slack-notifier@v1
+      - name: Notify release note update
+        uses: actions-ecosystem/action-slack-notifier@v1
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel: ci
-          message: '${{ github.repository }} の下書きリリースが更新されました。'
+          message: ':memo: ${{ github.repository }} の下書きリリースノートが更新されました。'
           custom_payload: |
             {
               "blocks": [
@@ -39,21 +40,14 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":memo: <https://github.com/${{ github.repository }}|${{ github.repository }}> の下書きリリースが更新されました。"
+                    "text": ":memo: <https://github.com/${{ github.repository }}|${{ github.repository }}> の下書きリリースノート <${{ steps.draft.outputs.html_url }}|${{ steps.draft.outputs.tag_name }}> が更新されました。"
                   }
                 },
                 {
                   "type": "section",
                   "text": {
-                      "type": "mrkdwn",
-                      "text": "*次のリリース*\n<${{ steps.draft.outputs.html_url }}|${{ steps.draft.outputs.tag_name }}>"
-                    }
-                },
-                {
-                  "type": "section",
-                  "text": {
                     "type": "mrkdwn",
-                    "text": "*リリースノート (下書き)*\n```\n${{ steps.escape-note.outputs.result }}\n```"
+                    "text": "```\n${{ steps.escape-note.outputs.result }}\n```"
                   }
                 },
                 {
@@ -103,10 +97,13 @@ jobs:
                   "elements": [
                     {
                       "type": "plain_text",
-                      "text": "リリースを publish するとビルド、デプロイ、ロールアウトも実行されます。",
+                      "text": "リリースを publish すると、ビルド、デプロイ、ロールアウトも実行されます。",
                       "emoji": true
                     }
                   ]
+                },
+             		{
+                  "type": "divider"
                 }
               ]
             }
