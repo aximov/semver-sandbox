@@ -39,7 +39,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "<https://github.com/${{ github.repository }}|${{ github.repository }}> の下書きリリースが更新されました。"
+                    "text": ":memo:<https://github.com/${{ github.repository }}|${{ github.repository }}> の下書きリリースが更新されました。"
                   }
                 },
                 {
