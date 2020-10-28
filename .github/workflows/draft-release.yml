@@ -97,7 +97,7 @@ jobs:
                   "elements": [
                     {
                       "type": "plain_text",
-                      "text": "リリースを publish すると、ビルド、デプロイ、ロールアウトも実行されます。",
+                      "text": "リリースを publish すると、 production へのデプロイとロールアウトが実行されます。",
                       "emoji": true
                     }
                   ]
