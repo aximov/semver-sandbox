@@ -47,3 +47,10 @@ jobs:
           status: ${{ job.status }}
           deployment_id: ${{ steps.start-deployment.outputs.deployment_id }}
           env_url: ${{ steps.deploy.outputs.url }}
+      - name: Notify deployment success
+        uses: actions-ecosystem/action-slack-notifier@v1
+        with:
+          slack_token: ${{ secrets.SLACK_TOKEN }}
+          channel: ci
+          message: |
+            :package: <https://github.com/${{ github.repository }}|${{ github.repository }}> を <${{ steps.deploy.outputs.url }}|staging> にデプロイしました。 (<https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks|log>)
