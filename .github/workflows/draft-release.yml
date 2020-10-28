@@ -31,7 +31,7 @@ jobs:
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel: ci
-          message: '${{ github.repository }} の下書きリリースが更新されました。'
+          message: ':memo: ${{ github.repository }} の下書きリリースが更新されました。'
           custom_payload: |
             {
               "blocks": [
@@ -41,70 +41,77 @@ jobs:
                     "type": "mrkdwn",
                     "text": ":memo: <https://github.com/${{ github.repository }}|${{ github.repository }}> の下書きリリースが更新されました。"
                   }
-                },
+                }
+              ],
+              "attachments": [
                 {
-                  "type": "section",
-                  "text": {
-                      "type": "mrkdwn",
-                      "text": "*次のリリース*\n<${{ steps.draft.outputs.html_url }}|${{ steps.draft.outputs.tag_name }}>"
-                    }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*リリースノート (下書き)*\n```\n${{ steps.escape-note.outputs.result }}\n```"
-                  }
-                },
-                {
-                  "type": "actions",
-                  "elements": [
+                  "color": "#2196F3",
+                  "blocks": [
                     {
-                      "type": "button",
+                      "type": "section",
                       "text": {
-                        "type": "plain_text",
-                        "emoji": true,
-                        "text": "リリースノートを編集"
-                      },
-                      "style": "primary",
-                      "url": "${{ steps.url-draft-edit.outputs.result }}"
+                          "type": "mrkdwn",
+                          "text": "*次のリリース*\n<${{ steps.draft.outputs.html_url }}|${{ steps.draft.outputs.tag_name }}>"
+                        }
                     },
                     {
-                      "type": "button",
+                      "type": "section",
                       "text": {
-                        "type": "plain_text",
-                        "emoji": true,
-                        "text": "package.json & tag の更新"
-                      },
-                      "url": "https://github.com/${{ github.repository }}/actions?query=workflow%3AVersion",
-                      "confirm": {
-                        "title": {
-                          "type": "plain_text",
-                          "text": "リリースの準備はできましたか?"
-                        },
-                        "text": {
-                          "type": "mrkdwn",
-                          "text": "package.json と tag を次のリリースバージョンに更新し、デフォルトブランチに直接コミットします。\nリリース内容が固まったら実行してください。"
-                        },
-                        "confirm": {
-                          "type": "plain_text",
-                          "text": "更新ページを開いてバージョンを入力する"
-                        },
-                        "deny": {
-                          "type": "plain_text",
-                          "text": "まだしない"
-                        }
+                        "type": "mrkdwn",
+                        "text": "*リリースノート (下書き)*\n```\n${{ steps.escape-note.outputs.result }}\n```"
                       }
-                    }
-                  ]
-                },
-                {
-                  "type": "context",
-                  "elements": [
+                    },
                     {
-                      "type": "plain_text",
-                      "text": "リリースを publish するとビルド、デプロイ、ロールアウトも実行されます。",
-                      "emoji": true
+                      "type": "actions",
+                      "elements": [
+                        {
+                          "type": "button",
+                          "text": {
+                            "type": "plain_text",
+                            "emoji": true,
+                            "text": "リリースノートを編集"
+                          },
+                          "style": "primary",
+                          "url": "${{ steps.url-draft-edit.outputs.result }}"
+                        },
+                        {
+                          "type": "button",
+                          "text": {
+                            "type": "plain_text",
+                            "emoji": true,
+                            "text": "package.json & tag の更新"
+                          },
+                          "url": "https://github.com/${{ github.repository }}/actions?query=workflow%3AVersion",
+                          "confirm": {
+                            "title": {
+                              "type": "plain_text",
+                              "text": "リリースの準備はできましたか?"
+                            },
+                            "text": {
+                              "type": "mrkdwn",
+                              "text": "package.json と tag を次のリリースバージョンに更新し、デフォルトブランチに直接コミットします。\nリリース内容が固まったら実行してください。"
+                            },
+                            "confirm": {
+                              "type": "plain_text",
+                              "text": "更新ページを開いてバージョンを入力する"
+                            },
+                            "deny": {
+                              "type": "plain_text",
+                              "text": "まだしない"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "context",
+                      "elements": [
+                        {
+                          "type": "plain_text",
+                          "text": "リリースを publish するとビルド、デプロイ、ロールアウトも実行されます。",
+                          "emoji": true
+                        }
+                      ]
                     }
                   ]
                 }
