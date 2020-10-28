@@ -69,4 +69,4 @@ jobs:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel: ci
           message: |
-            :package::warning: <https://github.com/${{ github.repository }}|${{ github.repository }}> の <${{ steps.deploy.outputs.url }}|staging> へのデプロイに失敗しました。 <https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks|(log)>
+            :package::warning: <https://github.com/${{ github.repository }}|${{ github.repository }}> の staging へのデプロイに失敗しました。 <https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks|(log)>
