@@ -49,8 +49,17 @@ jobs:
           env_url: ${{ steps.deploy.outputs.url }}
       - name: Notify deployment success
         uses: actions-ecosystem/action-slack-notifier@v1
+        if: success()
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel: ci
           message: |
-            :package: <https://github.com/${{ github.repository }}|${{ github.repository }}> を <${{ steps.deploy.outputs.url }}|staging> にデプロイしました。 (<https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks|log>)
+            :package::rocket: <https://github.com/${{ github.repository }}|${{ github.repository }}> を <${{ steps.deploy.outputs.url }}|staging> にデプロイしました。 <https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks|(log)>
+      - name: Notify deployment failure
+        uses: actions-ecosystem/action-slack-notifier@v1
+        if: failure()
+        with:
+          slack_token: ${{ secrets.SLACK_TOKEN }}
+          channel: ci
+          message: |
+            :package::warning: <https://github.com/${{ github.repository }}|${{ github.repository }}> の <${{ steps.deploy.outputs.url }}|staging> へのデプロイに失敗しました。 <https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks|(log)>
