@@ -43,6 +43,4 @@ jobs:
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel: ci
-          message: 'package.json と tag の ${{ github.event.inputs.version }} への更新が完了しました: <https://github.com/${{ github.repository }}/commit/${{ steps.commit-hash.outputs.this }}|commit>'
-          verbose: true
-          color: 'blue'
+          message: ':up: <https://github.com/${{ github.repository }}|${{ github.repository }}> の package.json と tag を ${{ github.event.inputs.version }} に更新しました。 <https://github.com/${{ github.repository }}/commit/${{ steps.commit-hash.outputs.this }}|(commit)>'
