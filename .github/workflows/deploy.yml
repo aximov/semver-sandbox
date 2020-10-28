@@ -44,8 +44,8 @@ jobs:
         uses: GoogleCloudPlatform/github-actions/appengine-deploy@master
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          deliverables: app.stage.yaml
-          version: ${{ github.sha }}
+          deliverables: app.yaml
+          version: ${{ steps.format.outputs.version }}
           promote: true
       - name: Finish Deployment
         uses: bobheadxi/deployments@v0.4.2
