@@ -39,7 +39,14 @@ jobs:
           channel: ci
           message: |
             :gift::building_construction: <${{ github.event.release.html_url }}|${{ github.repository }} ${{ github.event.release.tag_name }}> の production へのデプロイを開始します。 <https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks|(log)>
-      - run: gcloud app deploy --quiet --version ${{ steps.format.outputs.version }}
+      - name: Execute deployment
+        id: deploy
+        uses: GoogleCloudPlatform/github-actions/appengine-deploy@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          deliverables: app.stage.yaml
+          version: ${{ github.sha }}
+          promote: true
       - name: Finish Deployment
         uses: bobheadxi/deployments@v0.4.2
         # always は deploy が失敗したときも deployment を終了させるために必要
