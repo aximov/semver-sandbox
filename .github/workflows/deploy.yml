@@ -56,6 +56,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           status: ${{ job.status }}
           deployment_id: ${{ steps.start-deployment.outputs.deployment_id }}
+          env_url: ${{ steps.deploy.outputs.url }}
       - name: Notify deployment success
         uses: actions-ecosystem/action-slack-notifier@v1
         if: success()
