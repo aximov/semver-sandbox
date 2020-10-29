@@ -8,6 +8,7 @@ on:
 env:
   mrkdwn_action_log_link: <https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks|(log)>
   mrkdwn_repo_link: <https://github.com/${{ github.repository }}|${{ github.repository }}>
+  channel: C01DC7NL1QU
 
 jobs:
   deploy:
@@ -45,7 +46,7 @@ jobs:
         uses: actions-ecosystem/action-slack-notifier@v1
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel: ci
+          channel: ${{ env.channel }}
           message: |
             :package::building_construction: ${{ env.mrkdwn_repo_link }} の staging へのデプロイを開始します。 ${{ env.mrkdwn_action_log_link }}
       - name: Execute deployment
@@ -71,7 +72,7 @@ jobs:
         if: success()
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel: ci
+          channel: ${{ env.channel }}
           message: |
             :package::rocket: ${{ env.mrkdwn_repo_link }} の <${{ steps.deploy.outputs.url }}|staging> へのデプロイを完了しました。 ${{ env.mrkdwn_action_log_link }}
       - name: Notify deployment failure
@@ -79,6 +80,6 @@ jobs:
         if: failure()
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel: ci
+          channel: ${{ env.channel }}
           message: |
             :package::warning: ${{ env.mrkdwn_repo_link }} の staging へのデプロイに失敗しました。 ${{ env.mrkdwn_action_log_link }}
