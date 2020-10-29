@@ -85,7 +85,7 @@ jobs:
                         },
                         "confirm": {
                           "type": "plain_text",
-                          "text": "更新ページを開いてバージョンを入力する"
+                          "text": "更新ページを開く"
                         },
                         "deny": {
                           "type": "plain_text",
