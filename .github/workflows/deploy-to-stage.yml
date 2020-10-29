@@ -11,7 +11,7 @@ env:
   channel: C01DC7NL1QU
 
 jobs:
-  deploy:
+  deploy-to-stage:
     name: Deploy to staging environment
     runs-on: ubuntu-latest
     steps:
