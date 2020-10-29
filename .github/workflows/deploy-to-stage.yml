@@ -5,6 +5,9 @@ on:
     branches:
       - "main"
 
+env:
+  mrkdwn_action_log_link: <https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks|(log)>
+
 jobs:
   deploy:
     name: Deploy to staging environment
@@ -43,7 +46,7 @@ jobs:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel: ci
           message: |
-            :package::building_construction: <https://github.com/${{ github.repository }}|${{ github.repository }}> の staging へのデプロイを開始します。 <https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks|(log)>
+            :package::building_construction: <https://github.com/${{ github.repository }}|${{ github.repository }}> の staging へのデプロイを開始します。 ${{ env.mrkdwn_action_log_link }}
       - name: Execute deployment
         id: deploy
         uses: GoogleCloudPlatform/github-actions/appengine-deploy@master
@@ -69,7 +72,7 @@ jobs:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel: ci
           message: |
-            :package::rocket: <https://github.com/${{ github.repository }}|${{ github.repository }}> の <${{ steps.deploy.outputs.url }}|staging> へのデプロイを完了しました。 <https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks|(log)>
+            :package::rocket: <https://github.com/${{ github.repository }}|${{ github.repository }}> の <${{ steps.deploy.outputs.url }}|staging> へのデプロイを完了しました。 ${{ env.mrkdwn_action_log_link }}
       - name: Notify deployment failure
         uses: actions-ecosystem/action-slack-notifier@v1
         if: failure()
@@ -77,4 +80,4 @@ jobs:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel: ci
           message: |
-            :package::warning: <https://github.com/${{ github.repository }}|${{ github.repository }}> の staging へのデプロイに失敗しました。 <https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks|(log)>
+            :package::warning: <https://github.com/${{ github.repository }}|${{ github.repository }}> の staging へのデプロイに失敗しました。 ${{ env.mrkdwn_action_log_link }}
