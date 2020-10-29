@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+env:
+  channel: C01DC7NL1QU
+
 jobs:
   update_release_draft:
     name: Update release draft
@@ -31,7 +34,7 @@ jobs:
         uses: actions-ecosystem/action-slack-notifier@v1
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel: ci
+          channel: ${{ env.channel }}
           message: ':memo: ${{ github.repository }} の下書きリリースノートが更新されました。'
           custom_payload: |
             {
