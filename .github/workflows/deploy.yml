@@ -5,6 +5,11 @@ on:
     types:
       - released
 
+env:
+  mrkdwn_action_log_link: <https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks|(log)>
+  mrkdwn_tag_link: <${{ github.event.release.html_url }}|${{ github.repository }} ${{ github.event.release.tag_name }}>
+  channel: C01DC7NL1QU
+
 jobs:
   deploy:
     name: Deploy to GAE
@@ -36,9 +41,9 @@ jobs:
         uses: actions-ecosystem/action-slack-notifier@v1
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel: ci
+          channel: ${{ env.channel }}
           message: |
-            :gift::building_construction: <${{ github.event.release.html_url }}|${{ github.repository }} ${{ github.event.release.tag_name }}> の production へのデプロイを開始します。 <https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks|(log)>
+            :gift::building_construction: ${{ env.mrkdwn_tag_link }} の production へのデプロイを開始します。 ${{ env.mrkdwn_action_log_link }}
       - name: Execute deployment
         id: deploy
         uses: GoogleCloudPlatform/github-actions/appengine-deploy@master
@@ -62,14 +67,14 @@ jobs:
         if: success()
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel: ci
+          channel: ${{ env.channel }}
           message: |
-            :gift::rocket: <${{ github.event.release.html_url }}|${{ github.repository }} ${{ github.event.release.tag_name }}> の <${{ steps.deploy.outputs.url }}|production> へのデプロイを完了しました。 <https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks|(log)>
+            :gift::rocket: ${{ env.mrkdwn_tag_link }} の <${{ steps.deploy.outputs.url }}|production> へのデプロイを完了しました。 ${{ env.mrkdwn_action_log_link }}
       - name: Notify deployment failure
         uses: actions-ecosystem/action-slack-notifier@v1
         if: failure()
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel: ci
+          channel: ${{ env.channel }}
           message: |
-            :gift::warning: <${{ github.event.release.html_url }}|${{ github.repository }} ${{ github.event.release.tag_name }}> の production へのデプロイに失敗しました。 <https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks|(log)>
+            :gift::warning: ${{ env.mrkdwn_tag_link }} の production へのデプロイに失敗しました。 ${{ env.mrkdwn_action_log_link }}

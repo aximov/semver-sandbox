@@ -4,6 +4,12 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+env:
+  mrkdwn_action_log_link: <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|(log)>
+  mrkdwn_pr_link: <${{ github.event.pull_request.html_url }}|${{ github.repository }}#${{ github.event.pull_request.number }}>
+  version: pull-request-${{ github.event.pull_request.number }}
+  channel: C01DC7NL1QU
+
 jobs:
   deploy:
     name: Deploy to dev environment
@@ -34,9 +40,9 @@ jobs:
         uses: actions-ecosystem/action-slack-notifier@v1
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel: ci
+          channel: ${{ env.channel }}
           message: |
-            :wrench::building_construction: <${{ github.event.pull_request.html_url }}|${{ github.repository }}#${{ github.event.pull_request.number }}> の dev へのデプロイを開始します。 <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|(log)>
+            :wrench::building_construction: ${{ env.mrkdwn_pr_link }} の dev へのデプロイを開始します。 ${{ env.mrkdwn_action_log_link }}
 
       - name: Execute deployment
         id: deploy
@@ -44,7 +50,7 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           deliverables: app.dev.yaml
-          version: "pull-request-${{ github.event.pull_request.number }}"
+          version: ${{ env.version }}
           promote: false
 
       - name: Finish Deployment
@@ -63,15 +69,15 @@ jobs:
         if: success()
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel: ci
+          channel: ${{ env.channel }}
           message: |
-            :wrench::rocket: <${{ github.event.pull_request.html_url }}|${{ github.repository }}#${{ github.event.pull_request.number }}> の <${{ steps.deploy.outputs.url }}|dev> へのデプロイを完了しました。 <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|(log)>
+            :wrench::rocket: ${{ env.mrkdwn_pr_link }} の <${{ steps.deploy.outputs.url }}|dev> へのデプロイを完了しました。 ${{ env.mrkdwn_action_log_link }}
 
       - name: Notify deployment failure
         uses: actions-ecosystem/action-slack-notifier@v1
         if: failure()
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel: ci
+          channel: ${{ env.channel }}
           message: |
-            :wrench::warning: <${{ github.event.pull_request.html_url }}|${{ github.repository }}#${{ github.event.pull_request.number }}> の dev へのデプロイに失敗しました。 <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|(log)>
+            :wrench::warning: ${{ env.mrkdwn_pr_link }} の dev へのデプロイに失敗しました。 ${{ env.mrkdwn_action_log_link }}
