@@ -6,6 +6,7 @@ on:
 
 env:
   mrkdwn_action_log_link: <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|(log)>
+  mrkdown_pr_link: <${{ github.event.pull_request.html_url }}|${{ github.repository }}#${{ github.event.pull_request.number }}>
   channel: C01DC7NL1QU
 
 jobs:
@@ -40,7 +41,7 @@ jobs:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel: ${{ env.channel }}
           message: |
-            :wrench::building_construction: <${{ github.event.pull_request.html_url }}|${{ github.repository }}#${{ github.event.pull_request.number }}> の dev へのデプロイを開始します。 ${{ env.mrkdwn_action_log_link }}
+            :wrench::building_construction: ${{ env.mrkdwn_pr_link }} の dev へのデプロイを開始します。 ${{ env.mrkdwn_action_log_link }}
 
       - name: Execute deployment
         id: deploy
@@ -69,7 +70,7 @@ jobs:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel: ${{ env.channel }}
           message: |
-            :wrench::rocket: <${{ github.event.pull_request.html_url }}|${{ github.repository }}#${{ github.event.pull_request.number }}> の <${{ steps.deploy.outputs.url }}|dev> へのデプロイを完了しました。 ${{ env.mrkdwn_action_log_link }}
+            :wrench::rocket: ${{ env.mrkdwn_pr_link }} の <${{ steps.deploy.outputs.url }}|dev> へのデプロイを完了しました。 ${{ env.mrkdwn_action_log_link }}
 
       - name: Notify deployment failure
         uses: actions-ecosystem/action-slack-notifier@v1
@@ -78,4 +79,4 @@ jobs:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel: ${{ env.channel }}
           message: |
-            :wrench::warning: <${{ github.event.pull_request.html_url }}|${{ github.repository }}#${{ github.event.pull_request.number }}> の dev へのデプロイに失敗しました。 ${{ env.mrkdwn_action_log_link }}
+            :wrench::warning: ${{ env.mrkdwn_pr_link }} の dev へのデプロイに失敗しました。 ${{ env.mrkdwn_action_log_link }}
