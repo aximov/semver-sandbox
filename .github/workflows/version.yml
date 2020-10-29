@@ -26,6 +26,7 @@ jobs:
               repo: context.repo.repo,
               per_page: 1
             });
+            console.log(releases);
             const latest = releases[0];
             if (latest.draft) {
               return latest.tag_name;
