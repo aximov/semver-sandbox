@@ -26,9 +26,9 @@ jobs:
         with:
           step: start
           token: ${{ secrets.GITHUB_TOKEN }}
-          desc: "PR #${{ github.event.pull_request.number }}, branch ${{ github.ref }}"
+          desc: "PR #${{ github.event.pull_request.number }}, branch ${{ github.event.pull_request.head.ref }}"
           env: dev
-          ref: ${{ github.ref }}
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Notify deployment in progress
         uses: actions-ecosystem/action-slack-notifier@v1
