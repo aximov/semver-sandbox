@@ -7,6 +7,7 @@ on:
 
 env:
   mrkdwn_action_log_link: <https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks|(log)>
+  mrkdwn_tag_link: <${{ github.event.release.html_url }}|${{ github.repository }} ${{ github.event.release.tag_name }}>
 
 jobs:
   deploy:
@@ -41,7 +42,7 @@ jobs:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel: ci
           message: |
-            :gift::building_construction: <${{ github.event.release.html_url }}|${{ github.repository }} ${{ github.event.release.tag_name }}> の production へのデプロイを開始します。 ${{ env.mrkdwn_action_log_link }}
+            :gift::building_construction: ${{ env.mrkdwn_tag_link }} の production へのデプロイを開始します。 ${{ env.mrkdwn_action_log_link }}
       - name: Execute deployment
         id: deploy
         uses: GoogleCloudPlatform/github-actions/appengine-deploy@master
@@ -67,7 +68,7 @@ jobs:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel: ci
           message: |
-            :gift::rocket: <${{ github.event.release.html_url }}|${{ github.repository }} ${{ github.event.release.tag_name }}> の <${{ steps.deploy.outputs.url }}|production> へのデプロイを完了しました。 ${{ env.mrkdwn_action_log_link }}
+            :gift::rocket: ${{ env.mrkdwn_tag_link }} の <${{ steps.deploy.outputs.url }}|production> へのデプロイを完了しました。 ${{ env.mrkdwn_action_log_link }}
       - name: Notify deployment failure
         uses: actions-ecosystem/action-slack-notifier@v1
         if: failure()
@@ -75,4 +76,4 @@ jobs:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel: ci
           message: |
-            :gift::warning: <${{ github.event.release.html_url }}|${{ github.repository }} ${{ github.event.release.tag_name }}> の production へのデプロイに失敗しました。 ${{ env.mrkdwn_action_log_link }}
+            :gift::warning: ${{ env.mrkdwn_tag_link }} の production へのデプロイに失敗しました。 ${{ env.mrkdwn_action_log_link }}
