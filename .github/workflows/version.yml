@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
 
 env:
+  mrkdwn_action_log_link: <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|(log)>
   channel: C01DC7NL1QU
 
 jobs:
@@ -56,9 +57,17 @@ jobs:
         id: commit-hash
         run: echo "::set-output name=this::`git rev-parse HEAD`"
 
-      - name: Post to Slack
+      - name: Notify success
         uses: actions-ecosystem/action-slack-notifier@v1
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel: ${{ env.channel }}
           message: ':up: <https://github.com/${{ github.repository }}|${{ github.repository }}> の package.json と tag を ${{ steps.version.outputs.result }} に更新しました。 <https://github.com/${{ github.repository }}/commit/${{ steps.commit-hash.outputs.this }}|(commit)>'
+
+      - name: Notify failure
+        uses: actions-ecosystem/action-slack-notifier@v1
+        if: failure()
+        with:
+          slack_token: ${{ secrets.SLACK_TOKEN }}
+          channel: ${{ env.channel }}
+          message: ':up: <https://github.com/${{ github.repository }}|${{ github.repository }}> の package.json と tag の更新に失敗しました。 ${{ mrkdwn_action_log_link }}'
