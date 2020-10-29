@@ -2,10 +2,6 @@ name: Version
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'New version to tag (like v0.0.0)'
-        required: true
 
 env:
   channel: C01DC7NL1QU
@@ -20,6 +16,24 @@ jobs:
         with:
           ref: main
 
+      - name: Get draft release version
+        id: version
+        uses: actions/github-script@v3
+        with:
+          script: |
+            const releases = github.repos.listRelease({
+                               owner: context.repo.owner,
+                               repo: context.repo.repo,
+                               per_page: 1
+                             });
+            const latest = releases[0];
+            if (latest.draft) {
+              return latest.tag_name;
+            } else {
+              core.setFailed("Assumed the latest release was draft, but actually not.");
+            }
+          result-encoding: string
+
       - name: Set Node up
         uses: actions/setup-node@v2-beta
         with:
@@ -31,11 +45,11 @@ jobs:
           git config user.email github-actions@github.com
           yarn config set version-git-message "%s"
           yarn config set version-tag-prefix ""
-          yarn version --new-version ${{ github.event.inputs.version }}
+          yarn version --new-version ${{ steps.version.outputs.result }}
           git push
 
       - name: Push version tag
-        run: git push origin refs/tags/${{ github.event.inputs.version }}
+        run: git push origin refs/tags/${{ steps.version.outputs.result }}
 
       - name: Get commit hash
         id: commit-hash
@@ -46,4 +60,4 @@ jobs:
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel: ${{ env.channel }}
-          message: ':up: <https://github.com/${{ github.repository }}|${{ github.repository }}> の package.json と tag を ${{ github.event.inputs.version }} に更新しました。 <https://github.com/${{ github.repository }}/commit/${{ steps.commit-hash.outputs.this }}|(commit)>'
+          message: ':up: <https://github.com/${{ github.repository }}|${{ github.repository }}> の package.json と tag を ${{ steps.version.outputs.result }} に更新しました。 <https://github.com/${{ github.repository }}/commit/${{ steps.commit-hash.outputs.this }}|(commit)>'
