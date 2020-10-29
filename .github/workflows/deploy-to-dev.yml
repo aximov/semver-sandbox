@@ -7,6 +7,7 @@ on:
 env:
   mrkdwn_action_log_link: <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|(log)>
   mrkdwn_pr_link: <${{ github.event.pull_request.html_url }}|${{ github.repository }}#${{ github.event.pull_request.number }}>
+  version: pull-request-${{ github.event.pull_request.number }}
   channel: C01DC7NL1QU
 
 jobs:
@@ -49,7 +50,7 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           deliverables: app.dev.yaml
-          version: "pull-request-${{ github.event.pull_request.number }}"
+          version: ${{ env.version }}
           promote: false
 
       - name: Finish Deployment
