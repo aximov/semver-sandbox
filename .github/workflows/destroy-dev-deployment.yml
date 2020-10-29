@@ -22,7 +22,7 @@ jobs:
           export_default_credentials: true
 
       - name: Delete PR deployment
-        run: gcloud app version delete $version --service=$service --quiet
+        run: gcloud app version delete ${{ env.version }} --service=${{ env.service }} --quiet
 
       - name: Destroy GitHub dev deployment
         uses: bobheadxi/deployments@v0.4.2
