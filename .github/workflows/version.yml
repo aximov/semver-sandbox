@@ -70,4 +70,4 @@ jobs:
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel: ${{ env.channel }}
-          message: ':up: <https://github.com/${{ github.repository }}|${{ github.repository }}> の package.json と tag の更新に失敗しました。 ${{ mrkdwn_action_log_link }}'
+          message: ':up: <https://github.com/${{ github.repository }}|${{ github.repository }}> の package.json と tag の更新に失敗しました。 ${{ env.mrkdwn_action_log_link }}'
